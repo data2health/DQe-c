@@ -115,14 +115,106 @@ if (CDM %in% c("PCORNET3","PCORNET31")) {
   ## make another copy in the comparison directory for comparison
   # write.csv(withouts, file = paste("PATH/withouts_",CDM,"_",org,"_",as.character(format(Sys.Date(),"%d-%m-%Y")),".csv", sep=""))
   
-}   
+} else if (CDM %in% c("OMOP5")) {
+  
+  
+  #define the only wanted values
+  gender <- dbGetQuery(conn, paste0("SELECT concept_id FROM ",schema,prefix,"CONCEPT WHERE domain_id='Gender';"))
+  gender <- as.vector(gender[['concept_id']])
+  without_gender <- withoutdem(table = person, col = "gender_concept_id", ref_date2 = "2018-10-01", list = gender)
+  
+  ##race -- make sure we understand what values are in accepted list!
+  race <- dbGetQuery(conn, paste0("SELECT concept_id FROM ",schema,prefix,"CONCEPT WHERE domain_id='Race';"))
+  race <- as.vector(race[['concept_id']])
+  without_race <- withoutdem(table = person, col = "race_concept_id", ref_date2 = "2018-10-01" ,list = race)
+  
+  
+  #ethnicity
+  ethnicity <- c(38003563,38003564) 
+  without_ethnicity <- withoutdem(table = person, col = "ethnicity_concept_id", ref_date2 = "2018-10-01" ,list = ethnicity)
+  
+  #weight-looking for concept_ids codes for observation of weight
+  weight <- c(4178502, 4099154, 4310154, 40484200, 425024002)
+  # 
+  without_weight <- 
+    isPresent(table = "MEASUREMENT", col = "measurement_concept_id", ref_date2 = "2018-10-01" ,list = weight)
+  
+  #height - looking for OMOP concept ids for observation of height
+  height <- c(4177340, 4087492, 4154781)
+  # 
+  without_height <- 
+    isPresent(table = "MEASUREMENT", col = "measurement_concept_id", ref_date2 = "2018-10-01" ,list = height)
+  
+  #blood_pressure
+  blood_pressure <- c(4152194, 4154790, 4326744)
+  # 
+  without_BP_sys <- 
+    isPresent(table = "MEASUREMENT", col = "measurement_concept_id", ref_date2 = "2018-10-01" ,list = blood_pressure)
 
-
-
-
-
-
-
-
+  without_BP <- without_BP_sys
+  
+  #checks if patiets have a smoking status - looks for codes in this reference https://phinvads.cdc.gov/vads/ViewValueSet.action?id=E7943851-2633-E211-8ECF-001A4BE7FA90
+  smoking <- c(4310250, # ex smoker
+               40299112, # ex smoker
+               40329177, # ex smoker
+               40298672, # ex smoker
+               40329167, # ex smoker
+               42536346, # ex smoker
+               46270534, # ex smoker
+               4144272, # never smoked
+               45879404, # never smoked
+               42872410, # never smoked
+               40298657, # never smoked
+               45883537, # never smoked
+               45884038, # heavy smoker
+               4298794, #smoker (old code)
+               40427925, #smoker (old code)
+               40299110, # smoker
+               45878118, # light smoker
+               42709996, # smokes daily
+               45884037, # current some day smoker)
+               4141786 # unknown smoking status
+              ) 
+  # 
+  without_smoking <- 
+    isPresent(table = "MEASUREMENT", col = "measurement_concept_id", ref_date2 = "2018-10-01" ,list = smoking)
+  
+  
+  ##################
+  ##################
+  ######### Using Function "WITHOUT"
+  ####################
+  ####################
+  
+  # medication
+  without_medication <- 
+    isPresent(table = "DRUG_EXPOSURE", col = "drug_exposure_id", concept="Drug", ref_date2 = "2018-10-01" ,list = c())
+  
+  #Dx
+  without_diagnosis <- 
+    isPresent(table = "CONDITION_OCCURRENCE", col = "condition_occurrence_id", concept="Condition", ref_date2 = "2018-10-01" ,list = c())
+  
+  #Encounter -------------
+  #define the uwanted values in addition to NULLs...
+  encounter <- c("","%","$","#","@","NI")
+  # 
+  without_encounter <- 
+    without(table = "VISIT_OCCURRENCE", col = "visit_occurrence_id", ref_date2 = "2018-10-01" ,list = encounter)
+  
+  
+  
+  withouts <- rbind(without_encounter,without_diagnosis,without_medication,without_ethnicity,without_race,without_gender,without_weight,
+                    without_height,without_BP,without_smoking)
+  
+  
+  
+  withouts$perc <- percent(withouts$missing.percentage)
+  withouts$organization <- org
+  withouts$test_date <- as.character(format(Sys.Date(),"%m-%d-%Y"))
+  withouts$CDM <- CDM
+  
+  write.csv(withouts, file = paste("reports/withouts_",CDM,"_",org,"_",as.character(format(Sys.Date(),"%d-%m-%Y")),".csv", sep=""))
+  
+}
 
 

@@ -12,7 +12,7 @@ drv <- JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver", paste0(path01,"/sqlj
             identifier.quote="`")
 # creating a connection object by calling dbConnect
 conn <- dbConnect(drv, 
-                  "jdbc:sqlserver://DATABASE ADDRESS;databaseName=DATABASE NAME", 
+                  "jdbc:sqlserver://DATABASE_URL;databaseName=DATABASE_NAME", 
                   usrnm, 
                   pss)
 rm(pss)

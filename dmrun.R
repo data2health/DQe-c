@@ -16,7 +16,13 @@ if (CDM %in% c("PCORNET3","PCORNET31")) {
   DQTBL_KEYS$Index <- "Count_In"
   dmtest <- parse(file = "dmtest_pcornet3.R")
   
-} 
+} else if (CDM == "OMOP5") {
+  DQTBL_KEYS <- select(subset(DQTBL, ColNam %in% c("person_id","care_site_id","visit_occurrence_id","location_id","organization_id")),TabNam, ColNam, UNIQFRQ)
+  print (DQTBL_KEYS)
+  ## creating an index for plotting: Count In means number rof unique frequencies that exist in the reference table
+  DQTBL_KEYS$Index <- "Count_In"
+  dmtest <- parse(file = "dmtest_omop5.R")
+}
 
 
 for (i in seq_along(dmtest)) {
@@ -26,22 +32,5 @@ for (i in seq_along(dmtest)) {
 
 
 
-
 ###### this test is working based on DQTBL_KEYS 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

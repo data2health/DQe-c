@@ -8,10 +8,10 @@ source("keys.R")
 
 # set up connection
 drv <- dbDriver("PostgreSQL")
-con <- dbConnect(drv,
-                 dbname = "TYPE YOUR DATABASE NAME HERE",
-                 host = "TYPE YOUR HOST NAME HERE",
-                 port = ????,
+conn <- dbConnect(drv,
+                 dbname = "cdm",
+                 host = "localhost",
+                 port = 5432,
                  user = usrnm,
                  password = pss
                  )
@@ -20,5 +20,3 @@ rm(pss)
 #######
 ######## If you don't know your data base name, host, or port, contact your server admin.
 #######
-
-

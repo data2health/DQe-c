@@ -15,8 +15,15 @@ DQTBL$CDM <- CDM # Data Model
 ##store a table with list of all tables and columns in the repository
 
 if (SQL == "SQLServer") {repotabs <- dbGetQuery(conn,"SELECT COLUMN_NAME, TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS") 
-} else if (SQL == "Oracle") {repotabs <- dbGetQuery(conn,"SELECT COLUMN_NAME, TABLE_NAME FROM user_tab_cols")}
+} else if (SQL == "Oracle") {repotabs <- dbGetQuery(conn,"SELECT COLUMN_NAME, TABLE_NAME FROM user_tab_cols")
+} else if (SQL == "PostgreSQL") {repotabs <- dbGetQuery(conn,"SELECT COLUMN_NAME, TABLE_NAME FROM INFORMATION_SCHEMA.COLUMNS")
+} else if (SQL == "Redshift") {repotabs <- dbGetQuery(conn, paste("SELECT COLUMN_NAME, TABLE_NAME 
+                                                                  FROM INFORMATION_SCHEMA.COLUMNS
+                                                                  WHERE table_schema='",schema_orig,"';", sep=""))
+}
 
+colnames(repotabs)[1] <- toupper(colnames(repotabs)[1])
+colnames(repotabs)[2] <- toupper(colnames(repotabs)[2])
 
 
 #############################################################################
@@ -28,15 +35,18 @@ for (j in 1: length(unique(DQTBL$TabNam)))
   ##DQTBL$TabNam has all table names
 {
   NAM <-  unique(DQTBL$TabNam)[j]
+  
   ##extracted name of table j in CDM
   NAM_Repo <- as.character(tbls2[(tbls2$CDM_Tables == NAM),"Repo_Tables"])
   
   # L <- as.numeric(tbls2[(tbls2$CDM_Tables == NAM),"NCols"])
   id.NAM <- which(DQTBL$TabNam == NAM)
+
   id.repotabs <- which(repotabs$TABLE_NAME == NAM_Repo)
   ##extracting the row numbers
   NAMTB <- DQTBL[id.NAM,]
   REPOTB <- repotabs[id.repotabs,]
+  
   ##subsetting the DQTBL and repository table to only the rows from table j
   ##saving the name of table j as characters
   
@@ -50,7 +60,6 @@ for (j in 1: length(unique(DQTBL$TabNam)))
     ##stored frequency in the culumn FRQ
   }
 }
-
 
 
 #############################################################################
@@ -85,7 +94,6 @@ for (j in 1: length(unique(DQTBL$TabNam)))
     ##stored frequency in the culumn FRQ
   }
 }
-
 
 
 
