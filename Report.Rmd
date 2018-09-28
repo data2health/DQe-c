@@ -17,7 +17,7 @@ sourcePartial <- function(fn, skip=0, n=-1) {
     source(tc)
     close(tc)
 }
-sourcePartial("keys.R",47,12)
+sourcePartial("keys.R",64,6)
  
 ```
 
@@ -97,34 +97,34 @@ visNetwork(nodes, edges) %>%
   visInteraction(navigationButtons = T, dragView = FALSE, zoomView = FALSE)
 
 } else
-  if (CDM == "OMOPV5") {
-#     nodes <- data.frame(id = dat.net$X, 
-#                     label = dat.net$CDM_Tables, 
-#                     group = c(dat.net$status),
-#                     shadow = F)
-# edges <- data.frame(from = c(14,14,14,14,14,14,14,14,14,14,14,#person
-#                              17,17,17,17,17,#provider
-#                              1,1, #caresite
-#                              8,8, #drug exposure
-#                              18,18,18,18, #visit occurence
-#                              4, #condition occurence
-#                              16 #procedure occurence
-#                              ), 
-#                     to = c(9,11,13,18,9,8,4,16,10,2,5,#person's
-#                            1,8,4,16,10,#provider's
-#                            9,12,#care site's
-#                            7,6,#drug exposure's
-#                            8, 4, 16, 10, # visit occurence's
-#                            3, #condition occurence's
-#                            15 #procedure occurence's
-#                            ))
-# 
-# visGroups(groupname = "Table loaded but empty", color = "#EE9572", shape = "circle") %>%
-#   visGroups(groupname = "Table available", color = "#00C5CD", shape = "circle") %>%
-#   visGroups(groupname = "Table not loaded!", color = "gray", shape = "circle") %>%
-#   visOptions(highlightNearest = TRUE, nodesIdSelection = T) %>% 
-#   visEdges(arrows = 'from', scaling = list(min = .5, max = 1)) %>%
-#   visInteraction(navigationButtons = T, dragView = FALSE, zoomView = FALSE)
+  if (CDM == "OMOP5") {
+     nodes <- data.frame(id = dat.net$X, 
+                     label = dat.net$CDM_Tables, 
+                     group = c(dat.net$status),
+                     shadow = F)
+ edges <- data.frame(from = c(14,14,14,14,14,14,14,14,14,14,14,#person
+                              17,17,17,17,17,#provider
+                             1,1, #caresite
+                             8,8, #drug exposure
+                              18,18,18,18, #visit occurence
+                              4, #condition occurence
+                              16 #procedure occurence
+                              ), 
+                     to = c(9,11,13,18,9,8,4,16,10,2,5,#person's
+                            1,8,4,16,10,#provider's
+                            9,12,#care site's
+                            7,6,#drug exposure's
+                            8, 4, 16, 10, # visit occurence's
+                            3, #condition occurence's
+                            15 #procedure occurence's
+                            ))
+ 
+ visGroups(groupname = "Table loaded but empty", color = "#EE9572", shape = "circle") %>%
+   visGroups(groupname = "Table available", color = "#00C5CD", shape = "circle") %>%
+   visGroups(groupname = "Table not loaded!", color = "gray", shape = "circle") %>%
+   visOptions(highlightNearest = TRUE, nodesIdSelection = T) %>% 
+   visEdges(arrows = 'from', scaling = list(min = .5, max = 1)) %>%
+   visInteraction(navigationButtons = T, dragView = FALSE, zoomView = FALSE)
   }
 
 
@@ -238,16 +238,16 @@ plot2 <- ggplot(data=patid, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
   ylab("Frequency of Unique Values")
 (gg <- ggplotly(plot2))
 } else
-  if (CDM == "OMOPV5") {
-#     person_id<- filter(DQTBL_KEYS, ColNam == "person_id")
-# plot2 <- ggplot(data=person_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
-#   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
-#   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
-#   ggtitle(paste("Count of Unique ",unique(person_id$ColNam)," in Tables with ",unique(person_id$ColNam),
-#                 sep="")) +
-#   xlab(" Table Name") +
-#   ylab("Frequency of Unique Values")
-# (gg <- ggplotly(plot2))
+  if (CDM == "OMOP5") {
+     person_id<- filter(DQTBL_KEYS, ColNam == "person_id")
+ plot2 <- ggplot(data=person_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
+   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
+   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
+   ggtitle(paste("Count of Unique ",unique(person_id$ColNam)," in Tables with ",unique(person_id$ColNam),
+                 sep="")) +
+   xlab(" Table Name") +
+   ylab("Frequency of Unique Values")
+ (gg <- ggplotly(plot2))
   }
 
 
@@ -269,18 +269,18 @@ plot3 <- ggplot(data=encounterid, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
   ylab("Frequency of Unique Values")
 (gg <- ggplotly(plot3))
 } else
-  if (CDM == "OMOPV5") {
-#     care_site_id<- filter(DQTBL_KEYS, ColNam == "care_site_id")
-# 
-# plot3 <- ggplot(data=care_site_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
-#   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
-#   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
-#   ggtitle(paste("Count of Unique ",unique(care_site_id$ColNam)," in Tables with ",unique(care_site_id$ColNam),
-#                 sep="")) +
-#   xlab(" Table Name") +
-#   ylab("Frequency of Unique Values")
-# (gg <- ggplotly(plot3))
-  }
+  if (CDM == "OMOP5") {
+     care_site_id<- filter(DQTBL_KEYS, ColNam == "care_site_id")
+ 
+ plot3 <- ggplot(data=care_site_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
+   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
+   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
+   ggtitle(paste("Count of Unique ",unique(care_site_id$ColNam)," in Tables with ",unique(care_site_id$ColNam),
+                 sep="")) +
+   xlab(" Table Name") +
+   ylab("Frequency of Unique Values")
+ (gg <- ggplotly(plot3))
+}
 
 
 ```
@@ -300,17 +300,17 @@ plot4 <- ggplot(data=providerid, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
 (gg <- ggplotly(plot4))
 } else
   if (CDM == "OMOPV5") {
-#     visit_occurrence_id<- filter(DQTBL_KEYS, ColNam == "visit_occurrence_id")
-# 
-# plot4 <- ggplot(data=visit_occurrence_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
-#   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
-#   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
-#   ggtitle(paste("Count of Unique ",unique(visit_occurrence_id$ColNam)," in Tables with ",unique(visit_occurrence_id$ColNam),
-#                 sep="")) +
-#   xlab(" Table Name") +
-#   ylab("Frequency of Unique Values")
-# (gg <- ggplotly(plot4))
-  }
+     visit_occurrence_id<- filter(DQTBL_KEYS, ColNam == "visit_occurrence_id")
+ 
+ plot4 <- ggplot(data=visit_occurrence_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
+   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
+   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
+   ggtitle(paste("Count of Unique ",unique(visit_occurrence_id$ColNam)," in Tables with ",unique(visit_occurrence_id$ColNam),
+                 sep="")) +
+   xlab(" Table Name") +
+   ylab("Frequency of Unique Values")
+ (gg <- ggplotly(plot4))
+}
 
 
 
@@ -330,17 +330,17 @@ plot5 <- ggplot(data=enc_type, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
   ylab("Frequency of Unique Values")
 (gg <- ggplotly(plot5))
 } else
-  if (CDM == "OMOPV5") {
-#     location_id<- filter(DQTBL_KEYS, ColNam == "location_id")
-# 
-# plot5 <- ggplot(data=location_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
-#   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
-#   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
-#   ggtitle(paste("Count of Unique ",unique(location_id$ColNam)," in Tables with ",unique(location_id$ColNam),
-#                 sep="")) +
-#   xlab(" Table Name") +
-#   ylab("Frequency of Unique Values")
-# (gg <- ggplotly(plot5))
+  if (CDM == "OMOP5") {
+     location_id<- filter(DQTBL_KEYS, ColNam == "location_id")
+ 
+ plot5 <- ggplot(data=location_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
+   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
+   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
+   ggtitle(paste("Count of Unique ",unique(location_id$ColNam)," in Tables with ",unique(location_id$ColNam),
+                 sep="")) +
+   xlab(" Table Name") +
+   ylab("Frequency of Unique Values")
+ (gg <- ggplotly(plot5))
   }
 
 
@@ -361,17 +361,17 @@ plot6 <- ggplot(data=prescribingid, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) 
   ylab("Frequency of Unique Values")
 (gg <- ggplotly(plot6))
 } else
-  if (CDM == "OMOPV5") {
-#     organization_id<- filter(DQTBL_KEYS, ColNam == "organization_id")
-# 
-# plot6 <- ggplot(data=organization_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
-#   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
-#   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
-#   ggtitle(paste("Count of Unique ",unique(organization_id$ColNam)," in Tables with ",unique(organization_id$ColNam),
-#                 sep="")) +
-#   xlab(" Table Name") +
-#   ylab("Frequency of Unique Values")
-# (gg <- ggplotly(plot6))
+  if (CDM == "OMOP5") {
+     organization_id<- filter(DQTBL_KEYS, ColNam == "organization_id")
+ 
+ plot6 <- ggplot(data=organization_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
+   geom_bar(stat="identity", width = 1, aes(fill=Index)) +
+   scale_fill_manual(values=c("darkolivegreen3","firebrick1", "springgreen3")) +
+   ggtitle(paste("Count of Unique ",unique(organization_id$ColNam)," in Tables with ",unique(organization_id$ColNam),
+                 sep="")) +
+   xlab(" Table Name") +
+   ylab("Frequency of Unique Values")
+ (gg <- ggplotly(plot6))
   }
 
 
