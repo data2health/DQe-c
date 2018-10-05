@@ -5,8 +5,13 @@ source("libs.R")
 ###identify data model PCORnet V3
 ###CDM = "PCORNET3" #set to PCORNET31, if you have the latest CDM
 
-###identify data model OMOP V5
-CDM = "OMOP5"
+###identify data model
+# Options
+#   OMOPV5_0
+#   OMOPV5_2
+#   OMOPV5_3
+
+CDM = "OMOPV5_2"
 
 ###identify SQL connection Oracle or SQL Server
 ## options: SQLServer, Oracle, PostgreSQL, Redshift
@@ -14,6 +19,11 @@ SQL = "Redshift" ## "PostgreSQL" ##  ## SET to "Oracle" is Oracle is your RDBMS
 
 ## if you have your tables in a particular SQL schema, identify the schema here:
 #schema = "" ## default is that there is no schema. SET SCHEMA NAME, IF THERE IS ONE
+#Options
+#   "cmsdesynpuf1k"
+#   "cmsdesynpuf23m"
+#   "mimiciii100"
+#
 schema = "cmsdesynpuf1k"
 
 ## is there a prefix for table names in your database?
@@ -31,10 +41,11 @@ source("without.R")
 source("Comp_test.R")
 
 
-
+options(bitmapType='cairo')
 ## then generate the html report
 rmarkdown::render("Report.Rmd")
 
 
 
-source("DQe-v_queries.R")
+##source("DQe-v_queries.R")
+

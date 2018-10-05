@@ -8,27 +8,31 @@ if (schema != "") {
   }
 
 if (SQL == "SQLServer") {
-  source("Connect_SQLServer.R")
+  source("DBMS\ Connections/Connect_SQLServer.R")
 } else if (SQL == "PostgreSQL") {
-  source("Connect_PostgreSQL.R")
+  source("DBMS\ Connections/Connect_PostgreSQL.R")
 } else if (SQL == "Oracle") {
-  source("Connect_Oracle.R")
+  source("DBMS\ Connections/Connect_Oracle.R")
 } else if (SQL == "Redshift") {
-  source("Connect_RedshiftServer.R") ## for ODHSI tutorial
+  source("DBMS\ Connections/Connect_RedshiftServer.R") ## for ODHSI tutorial
 }
 
 if (CDM == "PCORNET3") {
-  DQTBL <- read.csv(file="DQTBL_pcornet_v3.csv",head=TRUE,sep=",")
+  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_pcornet_v3.csv",head=TRUE,sep=",")
   source("funcs_pcornet3.R")
 } else if (CDM == "PCORNET31") {
-  DQTBL <- read.csv(file="DQTBL_pcornet_v31.csv",head=TRUE,sep=",")
+  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_pcornet_v31.csv",head=TRUE,sep=",")
   source("funcs_pcornet3.R")
-} else if (CDM == "OMOP5") {
+} else if (CDM == "OMOPV5_0") {
   source("funcs_OMOP5.R")
-  DQTBL <- read.csv(file="DQTBL_omop_v5.csv",head=TRUE,sep=",")
+  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_omop_v5_0.csv",head=TRUE,sep=",")
+} else if (CDM == "OMOPV5_2") {
+  source("funcs_OMOP5.R")
+  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_omop_v5_2.csv",head=TRUE,sep=",")
+} else if (CDM == "OMOPV5_3") {
+  source("funcs_OMOP5.R")
+  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_omop_v5_3.csv",head=TRUE,sep=",")
 }
-
-
 
 # create a vector of tables 
 CDM_TABLES <- c(as.character(unique(DQTBL$TabNam)))
@@ -42,9 +46,8 @@ if (SQL %in% c("SQLServer", "PostreSQL")) {
   list <- dbGetQuery(conn, paste("SELECT * FROM INFORMATION_SCHEMA.TABLES tables WHERE tables.table_schema='",schema_orig,"';", sep=""))
 }
 
-list <- data.frame(list)
 
-if (CDM == "OMOP5") {
+if (CDM %in% c("OMOPV5_0", "OMOPV5_2", "OMOPV5_3")) {
   colnames(list)[3] <- "Repo_Tables"
 } else {
   colnames(list)[1] <- "Repo_Tables"
@@ -186,7 +189,7 @@ write.csv(select(subset(tbls2, tbls2$Rows>0),CDM_Tables), file = paste("reports/
 
 ## subsetting the empty/undelivered tables from DQTBL to avoid problems running loops in the analysis phase
 DQTBL <- subset(DQTBL, !(DQTBL$TabNam %in% no_tab))
-
+print (DQTBL)
 
 
 

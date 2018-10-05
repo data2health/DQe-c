@@ -1,6 +1,7 @@
 source("prep.R")
 
 # add columns needed for completeness analysis
+
 DQTBL$test_date <- as.factor(test_date)
 DQTBL$FRQ <- 0
 DQTBL$UNIQFRQ <- 0
@@ -10,6 +11,7 @@ DQTBL$MSs_PERC<- 0 # for percent missingness
 DQTBL$organization <- org #ORGANIZATION NAME
 DQTBL$test_date <- as.character(format(Sys.Date(),"%m-%d-%Y"))
 DQTBL$CDM <- CDM # Data Model
+
 
 
 ##store a table with list of all tables and columns in the repository

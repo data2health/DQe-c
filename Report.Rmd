@@ -118,7 +118,7 @@ visNetwork(nodes, edges) %>%
                             3, #condition occurence's
                             15 #procedure occurence's
                             ))
- 
+ visNetwork(nodes, edges) %>%
  visGroups(groupname = "Table loaded but empty", color = "#EE9572", shape = "circle") %>%
    visGroups(groupname = "Table available", color = "#00C5CD", shape = "circle") %>%
    visGroups(groupname = "Table not loaded!", color = "gray", shape = "circle") %>%
@@ -299,7 +299,7 @@ plot4 <- ggplot(data=providerid, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
   ylab("Frequency of Unique Values")
 (gg <- ggplotly(plot4))
 } else
-  if (CDM == "OMOPV5") {
+  if (CDM == "OMOP5") {
      visit_occurrence_id<- filter(DQTBL_KEYS, ColNam == "visit_occurrence_id")
  
  plot4 <- ggplot(data=visit_occurrence_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +

@@ -180,7 +180,7 @@ N <- length(msnames)
 for (n in 1:N) {
   compr[[n]] = data.frame(read.csv(paste0(path,"/",msnames[n],sep="")))
 }
-print(compr)
+
 #binding the tables together to create a masters table
 if (CDM %in% c("PCORNET3","PCORNET31")) {
   FRQ_comp <- subset(rbindlist(compr), (ColNam == "patid" & TabNam == "demographic") |

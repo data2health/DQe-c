@@ -115,7 +115,7 @@ if (CDM %in% c("PCORNET3","PCORNET31")) {
   ## make another copy in the comparison directory for comparison
   # write.csv(withouts, file = paste("PATH/withouts_",CDM,"_",org,"_",as.character(format(Sys.Date(),"%d-%m-%Y")),".csv", sep=""))
   
-} else if (CDM %in% c("OMOP5")) {
+} else if (CDM %in% c("OMOPV5_0", "OMOPV5_2", "OMOPV5_3")) {
   
   
   #define the only wanted values

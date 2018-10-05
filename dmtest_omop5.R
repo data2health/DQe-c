@@ -5,7 +5,13 @@ DQTBL_KEYS$Index <- ifelse(((DQTBL_KEYS$TabNam == "person" & DQTBL_KEYS$ColNam =
                               (DQTBL_KEYS$TabNam == "visit_occurrence" & DQTBL_KEYS$ColNam == "visit_occurrence_id") |
                               (DQTBL_KEYS$TabNam == "organization" & DQTBL_KEYS$ColNam == "organization_id") |
                               (DQTBL_KEYS$TabNam == "care_site" & DQTBL_KEYS$ColNam == "care_site_id") |
-                              (DQTBL_KEYS$TabNam == "location" & DQTBL_KEYS$ColNam == "location_id")),
+                              (DQTBL_KEYS$TabNam == "location" & DQTBL_KEYS$ColNam == "location_id") |
+                              (DQTBL_KEYS$TabNam == "specimen" & DQTBL_KEYS$ColNam == "specimen_id") |
+                              (DQTBL_KEYS$TabNam == "procedure_occurrence" & DQTBL_KEYS$ColNam == "procedure_occurrence_id") |
+                              (DQTBL_KEYS$TabNam == "drug_exposure" & DQTBL_KEYS$ColNam == "drug_exposure_id") |
+                              (DQTBL_KEYS$TabNam == "observation_period" & DQTBL_KEYS$ColNam == "observation_period_id") |
+                              (DQTBL_KEYS$TabNam == "measurement" & DQTBL_KEYS$ColNam == "measurement_id")
+                              ),
                            "Reference",
                            DQTBL_KEYS$Index)
 
@@ -164,4 +170,4 @@ DQTBL_KEYS[(DQTBL_KEYS$TabNam == "care_site" & DQTBL_KEYS$ColNam == "organizatio
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "care_site" & DQTBL_KEYS$ColNam == "organization_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] 
 
 
-write.csv(DQTBL_KEYS, file = paste("reports/DM_",usrnm,"_",as.character(format(Sys.Date(),"%d-%m-%Y")),".csv", sep=""))
+write.csv(DQTBL_KEYS, file = paste("reports/DM_",CDM,"_",org,"_",as.character(format(Sys.Date(),"%d-%m-%Y")),".csv", sep=""))
