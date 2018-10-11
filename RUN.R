@@ -2,8 +2,6 @@
 ##install/load required packages
 source("DQe-c Functions/libs.R")
 
-###identify data model PCORnet V3
-###CDM = "PCORNET3" #set to PCORNET31, if you have the latest CDM
 
 ###identify data model
 # Options
@@ -13,20 +11,21 @@ source("DQe-c Functions/libs.R")
 #   OMOPV5_2
 #   OMOPV5_3
 
-CDM = "OMOPV5_0"
+CDM = ""
 
-###identify SQL connection Oracle or SQL Server
+###identify SQL connection
 ## options: SQLServer, Oracle, PostgreSQL, Redshift
-SQL = "Redshift" ## "PostgreSQL" ##  ## SET to "Oracle" is Oracle is your RDBMS
+SQL = "" 
+
 
 ## if you have your tables in a particular SQL schema, identify the schema here:
-#schema = "" ## default is that there is no schema. SET SCHEMA NAME, IF THERE IS ONE
+## default is that there is no schema. SET SCHEMA NAME, IF THERE IS ONE
 #Options
 #   "cmsdesynpuf1k"
 #   "cmsdesynpuf23m"
 #   "mimiciii100"
 #
-schema = "cmsdesynpuf23m"
+schema = ""
 
 ## is there a prefix for table names in your database?
 prefix = "" ## default at none. SET PREFIX, IF THERE IS ONE
