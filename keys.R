@@ -7,10 +7,9 @@ getLoginDetails <- function(){
   ## Based on code by Barry Rowlingson
   ## http://r.789695.n4.nabble.com/tkentry-that-exits-after-RETURN-tt854721.html#none
   
-  username = "master"
-  password = "Password1"
-  #username = "trberg"
-  #password = "licit-anyplace-pentomic"
+  username = ""
+  password = ""
+  
   #require(tcltk)
   #tt <- tktoplevel()
   #tkwm.title(tt, "Get login details")
