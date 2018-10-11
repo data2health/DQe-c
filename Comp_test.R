@@ -202,8 +202,7 @@ if (CDM %in% c("PCORNET3","PCORNET31")) {
                        (ColNam == "visit_occurrence_id" & TabNam == "visit_occurrence") |
                        (ColNam == "condition_occurrence_id" & TabNam == "condition_occurrence") |
                        (ColNam == "procedure_occurrence_id" & TabNam == "procedure_occurrence") |
-                       (ColNam == "observation_id" & TabNam == "observation") |
-                       (ColNam == "visit_detail_id" & TabNam = "visit_detail")
+                       (ColNam == "observation_id" & TabNam == "observation")
   )
 } else if (CDM %in% c("OMOPV5_0")) {
   FRQ_comp <- subset(rbindlist(compr,fill = TRUE), (ColNam == "person_id" & TabNam == "person") |

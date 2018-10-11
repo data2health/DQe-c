@@ -372,7 +372,7 @@ plot6 <- ggplot(data=prescribingid, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) 
   ylab("Frequency of Unique Values")
 (gg <- ggplotly(plot6))
 } else
-  if (CDM %in% c("OMOPV5_2","OMOPV5_3")) {
+  if (CDM %in% c("")) {
      visit_detail_id<- filter(DQTBL_KEYS, ColNam == "visit_detail_id")
  
  plot6 <- ggplot(data=visit_detail_id, aes(x=reorder(TabNam, UNIQFRQ), y=UNIQFRQ)) +
