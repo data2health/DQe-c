@@ -36,6 +36,7 @@ if (SQL %in% c("SQLServer", "Redshift")) {
                                           CAST([day_of_birth] AS VARCHAR(2)))  < '", ref_date2,"'
                                       ) dd WHERE ", toupper(col), " NOT IN (",paste(list, collapse=","),");", collapse=""))
     
+    
     whattheyhave <- dbGetQuery(conn,
                                paste("SELECT DISTINCT(",toupper(col),") 
                                       FROM (SELECT * 
@@ -126,6 +127,9 @@ if (SQL %in% c("SQLServer", "Redshift")) {
     output <- data.frame("group"=list.name, "missing percentage" = as.numeric(pwse), "missing population"=as.numeric(whatsoever),"denominator"=as.numeric(denominator))
     return(output)
   }
+  
+  # a function to find all the patients who do not have a valid variable in their record
+  # choose a table and column to query and input a list of valid variable values
   isPresent <- function(table,col,list, concept="", # this list here works opposite to the list in the function above. here we identify what we do want that is not a demographic.
                         ref_date1 = "1900-01-01", ref_date2=Sys.Date()) {
     df.name <- deparse(substitute(table))
@@ -149,7 +153,7 @@ if (SQL %in% c("SQLServer", "Redshift")) {
       pats_with_one <- dbGetQuery(conn,
                                     paste0("SELECT COUNT(DISTINCT(person_id)) 
                                          FROM ",schema,table," 
-                                         WHERE ",toupper(col), " IN  ('",paste(list,collapse = "','"),"')"))
+                                         WHERE ",toupper(col), " IN  (",paste(list,collapse = ","),")"))
     }
     else {
       pats_with_one <- dbGetQuery(conn,
@@ -179,6 +183,14 @@ if (SQL %in% c("SQLServer", "Redshift")) {
       output <- data.frame("group"=concept, "missing percentage" = as.numeric(pwse), "missing population"=as.numeric(denominator-pats_with_one),"denominator"=as.numeric(denominator))
     }
     return(output)
+  }
+  
+  # a function to find all the descendants of the input OMOP concept codes from the concept ancestor table
+  getChildConcepts <- function(concept_id) {
+    childConcepts = dbGetQuery(conn, 
+                      paste0("SELECT descendant_concept_id FROM ", schema,prefix,"CONCEPT_ANCESTOR
+                              WHERE ancestor_concept_id IN ('",paste(concept_id,collapse = "','"),"');" ))
+    return(childConcepts$descendant_concept_id)
   }
   
 } else

@@ -196,17 +196,25 @@ if (CDM %in% c("PCORNET3","PCORNET31")) {
                        (ColNam == "trialid" & TabNam == "pcornet_trial") |
                        (ColNam == "networkid" & TabNam == "harvest") 
   )
-} else if (CDM %in% c("OMOP5")) {
+} else if (CDM %in% c("OMOPV5_2","OMOPV5_3")) {
   FRQ_comp <- subset(rbindlist(compr), (ColNam == "person_id" & TabNam == "person") |
                        (ColNam == "measurement_id" & TabNam == "measurement") |
                        (ColNam == "visit_occurrence_id" & TabNam == "visit_occurrence") |
                        (ColNam == "condition_occurrence_id" & TabNam == "condition_occurrence") |
                        (ColNam == "procedure_occurrence_id" & TabNam == "procedure_occurrence") |
-                       (ColNam == "observation_id" & TabNam == "observation")
+                       (ColNam == "observation_id" & TabNam == "observation") |
+                       (ColNam == "visit_detail_id" & TabNam = "visit_detail")
+  )
+} else if (CDM %in% c("OMOPV5_0")) {
+  FRQ_comp <- subset(rbindlist(compr,fill = TRUE), (ColNam == "person_id" & TabNam == "person") |
+                     (ColNam == "measurement_id" & TabNam == "measurement") |
+                     (ColNam == "visit_occurrence_id" & TabNam == "visit_occurrence") |
+                     (ColNam == "condition_occurrence_id" & TabNam == "condition_occurrence") |
+                     (ColNam == "procedure_occurrence_id" & TabNam == "procedure_occurrence") |
+                     (ColNam == "observation_id" & TabNam == "observation")
   )
 }
 
-print ("generate report")
 write.csv(FRQ_comp, file = paste("reports/FRQ_comp_",CDM,"_",org,"_",as.character(format(Sys.Date(),"%d-%m-%Y")),".csv", sep=""))
 
 

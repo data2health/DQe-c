@@ -2,7 +2,7 @@
 ###preparations to run the analysis
 ####################################
 
-if (schema != "") {
+if (schema != "" && !grepl(schema, ".")) {
   schema_orig = schema
   schema = paste0(schema,".")
   }
@@ -18,20 +18,20 @@ if (SQL == "SQLServer") {
 }
 
 if (CDM == "PCORNET3") {
-  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_pcornet_v3.csv",head=TRUE,sep=",")
-  source("funcs_pcornet3.R")
+  DQTBL <- read.csv(file="CDM\ Models/DQTBL_pcornet_v3.csv",head=TRUE,sep=",")
+  source("PCORI Functions/funcs_pcornet3.R")
 } else if (CDM == "PCORNET31") {
-  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_pcornet_v31.csv",head=TRUE,sep=",")
-  source("funcs_pcornet3.R")
+  DQTBL <- read.csv(file="CDM\ Models/DQTBL_pcornet_v31.csv",head=TRUE,sep=",")
+  source("PCORI Functions/funcs_pcornet3.R")
 } else if (CDM == "OMOPV5_0") {
-  source("funcs_OMOP5.R")
-  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_omop_v5_0.csv",head=TRUE,sep=",")
+  source("OMOP Functions/funcs_OMOP5.R")
+  DQTBL <- read.csv(file="CDM\ Models/DQTBL_omop_v5_0.csv",head=TRUE,sep=",")
 } else if (CDM == "OMOPV5_2") {
-  source("funcs_OMOP5.R")
-  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_omop_v5_2.csv",head=TRUE,sep=",")
+  source("OMOP Functions/funcs_OMOP5.R")
+  DQTBL <- read.csv(file="CDM\ Models/DQTBL_omop_v5_2.csv",head=TRUE,sep=",")
 } else if (CDM == "OMOPV5_3") {
-  source("funcs_OMOP5.R")
-  DQTBL <- read.csv(file="CDM\ Reference/DQTBL_omop_v5_3.csv",head=TRUE,sep=",")
+  source("OMOP Functions/funcs_OMOP5.R")
+  DQTBL <- read.csv(file="CDM\ Models/DQTBL_omop_v5_3.csv",head=TRUE,sep=",")
 }
 
 # create a vector of tables 
@@ -79,6 +79,8 @@ tbls2 <- data.frame(tbls)
 
 if (SQL == "Redshift") {
   colnames(tbls2)[10] <- "CDM_Tables"
+} else if (SQL == "SQLServer"){
+  colnames(tbls2)[5] <- "CDM_Tables"
 } else {
   colnames(tbls2)[2] <- "CDM_Tables"
 }
@@ -156,7 +158,8 @@ if (SQL == "SQLServer") {
                   by = "Repo_Tables",
                   type = "left")
     rm(x1)
-}
+  }
+
 rownames(tbls2) <- NULL
 
 ## creating a source table, tbls3, that merges tbls2 with CDM tables
@@ -164,6 +167,7 @@ tbls3 <- data.frame(unique(DQTBL$TabNam))
 
 colnames(tbls3)[1] <- "CDM_Tables"
 tbls3 <- join(tbls3, tbls2, by="CDM_Tables",type = "left")
+
 tbls3$loaded <- ifelse(is.na(tbls3$Repo_Tables), "No", "Yes")
 tbls3$available <- ifelse((!is.na(tbls3$Rows) & tbls3$Rows > 0 & tbls3$loaded == "Yes"), "Yes", "No")
 tbls3$index <- 1
@@ -180,7 +184,6 @@ write.csv(tbls3, file = paste("reports/load_details_",CDM,"_",org,"_",as.charact
 # listing tables that should be deducted from DQTBL            
 no_tab <- c(as.character(tbls3[(tbls3$loaded == "No" | tbls3$available == "No"),"CDM_Tables"]))
 
-
 ## write list of provided CDM tables for the record
 write.csv(select(subset(tbls2, tbls2$Rows>0),CDM_Tables), file = paste("reports/tablelist_",CDM,"_",org,"_",as.character(format(Sys.Date(),"%d-%m-%Y")),".csv", sep=""))
 
@@ -189,7 +192,6 @@ write.csv(select(subset(tbls2, tbls2$Rows>0),CDM_Tables), file = paste("reports/
 
 ## subsetting the empty/undelivered tables from DQTBL to avoid problems running loops in the analysis phase
 DQTBL <- subset(DQTBL, !(DQTBL$TabNam %in% no_tab))
-print (DQTBL)
 
 
 
