@@ -2,10 +2,10 @@
 ###preparations to run the analysis
 ####################################
 
-if (schema != "" && !grepl(schema, ".")) {
+if (schema != "" && substr(schema,nchar(schema),nchar(schema)) != ".") {
   schema_orig = schema
   schema = paste0(schema,".")
-  }
+}
 
 if (SQL == "SQLServer") {
   source("DBMS\ Connections/Connect_SQLServer.R")
