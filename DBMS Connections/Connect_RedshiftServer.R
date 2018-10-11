@@ -2,7 +2,7 @@
 library(RJDBC)
 
 # download Amazon Redshift JDBC driver if the file doesn't exist
-if(!file.exists('RedshiftJDBC41-1.1.9.1009.jar')) {
+if(!file.exists('/DBMS\ Connections/RedshiftJDBC41-1.1.9.1009.jar')) {
   download.file('http://s3.amazonaws.com/redshift-downloads/drivers/RedshiftJDBC41-1.1.9.1009.jar','DBMS\ Connections/RedshiftJDBC41-1.1.9.1009.jar')
 }
 
@@ -15,7 +15,7 @@ drv <- JDBC("com.amazon.redshift.jdbc41.Driver", paste0(path01,"/DBMS\ Connectio
 
 # connect to Amazon Redshift
 # url <- "<JDBCURL>:<PORT>/<DBNAME>
-url <- "jdbc:redshift://ohdsitutorialtest2-ohdsielas-redshiftclustermulti-1sizz9gq0e4uq.cc8ltappgfjt.us-east-1.redshift.amazonaws.com:5439/mycdm?ssl=true"
+url <- "jdbc:redshift://<JDBCURL>:5439/<DBNAME>?ssl=true"
 conn <- dbConnect(drv, url, usrnm, pss)
 
 rm(pss)
