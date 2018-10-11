@@ -4,7 +4,8 @@
 ###################++++++##################
 ##This scripts counts and stores frequency of missing values
 
-if (SQL == "SQLServer") {
+
+if (SQL %in% c("SQLServer", "Redshift")) {
   #############################################################################
   ##loop 3: goes through all columns in all tables and count rows with a NULL/NA value or empty string 
   ## and store in DQTBL table as a new column, called MS1_FRQ, for each row
@@ -17,7 +18,6 @@ if (SQL == "SQLServer") {
     NAM <-  unique(DQTBL$TabNam)[j]
     ##extracted name of table j in CDM
     NAM_Repo <- as.character(tbls2[(tbls2$CDM_Tables == NAM),"Repo_Tables"])
-    
     # L <- as.numeric(tbls2[(tbls2$CDM_Tables == NAM),"NCols"])
     id.NAM <- which(DQTBL$TabNam == NAM)
     id.repotabs <- which(repotabs$TABLE_NAME == NAM_Repo)
@@ -31,7 +31,7 @@ if (SQL == "SQLServer") {
       ##now going through the columns of table j
     {
       col <- REPOTB$COLUMN_NAME[i]
-      MS1_FRQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT('", col,"') FROM ",schema,NAM_Repo," WHERE [", col, "] IS NULL OR CAST(", col, " AS CHAR(54)) IN ('')")))
+      MS1_FRQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT('", col,"') FROM ",schema,NAM_Repo," WHERE [", col, "] IS NULL OR CAST(", col, " AS VARCHAR) IN ('')")))
       ##calculated length (number of total rows) of each column from each table
       DQTBL$MS1_FRQ <- ifelse(DQTBL$ColNam == tolower(col) & DQTBL$TabNam == NAM, MS1_FRQ, DQTBL$MS1_FRQ )
       ##stored frequency in the culumn FRQ
@@ -67,7 +67,7 @@ if (SQL == "SQLServer") {
       ##now going through the columns of table j
     {
       col <- REPOTB$COLUMN_NAME[i]
-      MS2_FRQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT('", col,"') FROM ",schema,NAM_Repo," WHERE CAST(", col, " AS CHAR(54)) IN ('+', '-', '_','#', '$', '*', '\', '?', '.', '&', '^', '%', '!', '@','NI')")))
+      MS2_FRQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT('", col,"') FROM ",schema,NAM_Repo," WHERE CAST(", col, " AS VARCHAR) IN ('+', '-', '_','#', '$', '*', '\', '?', '.', '&', '^', '%', '!', '@','NI')")))
       ##calculated length (number of total rows) of each column from each table
       DQTBL$MS2_FRQ <- ifelse(DQTBL$ColNam == tolower(col) & DQTBL$TabNam == NAM, MS2_FRQ, DQTBL$MS2_FRQ )
       ##stored frequency in the culumn FRQ
@@ -147,8 +147,8 @@ if (SQL == "SQLServer") {
   
 }
 ############# lets see what is going on with the providers table...
-# providchars <- dbGetQuery(conn, "SELECT providerid FROM dbo.pmndiagnosis WHERE CAST(providerid AS CHAR(54)) IN ('+', '-', '_','#', '$', '*', '\', '?', '.', '&', '^', '%', '!', '@')")
-# unique(providchars)
+###providchars <- dbGetQuery(conn, "SELECT providerid FROM dbo.pmndiagnosis WHERE CAST(providerid AS CHAR(54)) IN ('+', '-', '_','#', '$', '*', '\', '?', '.', '&', '^', '%', '!', '@')")
+###unique(providchars)
 ### everything is an @ !!!!!!!!!!!!
 
 DQTBL$FRQ <- as.numeric(DQTBL$FRQ)
@@ -182,7 +182,7 @@ for (n in 1:N) {
 }
 
 #binding the tables together to create a masters table
-if (CDM == "PCORNET3") {
+if (CDM %in% c("PCORNET3","PCORNET31")) {
   FRQ_comp <- subset(rbindlist(compr), (ColNam == "patid" & TabNam == "demographic") |
                        (ColNam == "dispensingid" & TabNam == "dispensing") |
                        (ColNam == "vitalid" & TabNam == "vital") |
@@ -196,8 +196,24 @@ if (CDM == "PCORNET3") {
                        (ColNam == "trialid" & TabNam == "pcornet_trial") |
                        (ColNam == "networkid" & TabNam == "harvest") 
   )
+} else if (CDM %in% c("OMOPV5_2","OMOPV5_3")) {
+  FRQ_comp <- subset(rbindlist(compr), (ColNam == "person_id" & TabNam == "person") |
+                       (ColNam == "measurement_id" & TabNam == "measurement") |
+                       (ColNam == "visit_occurrence_id" & TabNam == "visit_occurrence") |
+                       (ColNam == "condition_occurrence_id" & TabNam == "condition_occurrence") |
+                       (ColNam == "procedure_occurrence_id" & TabNam == "procedure_occurrence") |
+                       (ColNam == "observation_id" & TabNam == "observation") |
+                       (ColNam == "visit_detail_id" & TabNam = "visit_detail")
+  )
+} else if (CDM %in% c("OMOPV5_0")) {
+  FRQ_comp <- subset(rbindlist(compr,fill = TRUE), (ColNam == "person_id" & TabNam == "person") |
+                     (ColNam == "measurement_id" & TabNam == "measurement") |
+                     (ColNam == "visit_occurrence_id" & TabNam == "visit_occurrence") |
+                     (ColNam == "condition_occurrence_id" & TabNam == "condition_occurrence") |
+                     (ColNam == "procedure_occurrence_id" & TabNam == "procedure_occurrence") |
+                     (ColNam == "observation_id" & TabNam == "observation")
+  )
 }
-
 
 write.csv(FRQ_comp, file = paste("reports/FRQ_comp_",CDM,"_",org,"_",as.character(format(Sys.Date(),"%d-%m-%Y")),".csv", sep=""))
 
