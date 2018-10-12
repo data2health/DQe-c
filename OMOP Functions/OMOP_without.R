@@ -1,10 +1,10 @@
 
 ## these functions calculate the percentages of the different variables that patients are missing in the data
 
-test <- dbGetQuery(conn, paste0("SELECT DISTINCT obs.observation_concept_id, co.concept_name, co.concept_code
-                                FROM cmsdesynpuf23m.observation obs INNER JOIN cmsdesynpuf23m.concept co
-                                on co.concept_id=obs.observation_concept_id
-                                WHERE co.concept_name LIKE '%pulse%';"))
+#test <- dbGetQuery(conn, paste0("SELECT DISTINCT obs.observation_concept_id, co.concept_name, co.concept_code
+#                                FROM cmsdesynpuf23m.observation obs INNER JOIN cmsdesynpuf23m.concept co
+#                                on co.concept_id=obs.observation_concept_id
+#                                WHERE co.concept_name LIKE '%pulse%';"))
 #print (test)
 #stop()
 
