@@ -97,7 +97,7 @@ visNetwork(nodes, edges) %>%
   visInteraction(navigationButtons = T, dragView = FALSE, zoomView = FALSE)
 
 } else
-  if (CDM %in% c("OMOPV5_2")) {
+  if (CDM %in% c("OMOPV5_2", "OMOPV5_3")) {
      nodes <- data.frame(id = dat.net$X, 
                      label = dat.net$CDM_Tables, 
                      group = c(dat.net$status),
