@@ -108,7 +108,7 @@ visNetwork(nodes, edges) %>%
                               37,37,37,37,37,37,37,37, #visit occurrence
                              36,36,36,36,36,36,36, #visit detail
                              6,6, # cohort definition
-                             7,7,7,7,7,7,7, #concept
+                             7,7,7,7,7,7,7,7, #concept
                              9, #concept class
                              25, #note
                              1, #cohort attribute
@@ -123,7 +123,7 @@ visNetwork(nodes, edges) %>%
                             13,16,20,24,25,27,31,36, # visit occurrence
                             13,16,20,24,25,27,31, #visit detail
                             4,5, # cohort definition
-                            8,11,10,21,3,22,34, #concept
+                            8,11,10,21,3,22,34,25, #concept
                             7, #concept class
                             26, #note
                             5, #cohort attribute
@@ -131,6 +131,7 @@ visNetwork(nodes, edges) %>%
                             10, #relationships
                             7,3,34, #vocabulary
                             2,30 #location
+                            
                             ))
  visNetwork(nodes, edges) %>%
  visGroups(groupname = "Table loaded but empty", color = "#EE9572", shape = "circle") %>%
