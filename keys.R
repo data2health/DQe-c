@@ -7,8 +7,8 @@ getLoginDetails <- function(){
   ## Based on code by Barry Rowlingson
   ## http://r.789695.n4.nabble.com/tkentry-that-exits-after-RETURN-tt854721.html#none
   
-  username = "postgres"
-  password = "b1m3admin"
+  username = ""
+  password = ""
   
   #require(tcltk)
   #tt <- tktoplevel()
