@@ -146,7 +146,7 @@ visNetwork(nodes, edges) %>%
                      label = dat.net$CDM_Tables, 
                      group = c(dat.net$status),
                      shadow = F)
- edges <- data.frame(from = c(31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31, #person
+ edges <- data.frame(from = c(31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31, #person
                               33,33,33,33,33,33,33,33,33,33,#provider
                              2,2,2,2, #caresite
                               38,38,38,38,38,38,38,38, #visit occurrence
@@ -161,7 +161,7 @@ visNetwork(nodes, edges) %>%
                              39,39,39, #vocabulary
                              23,23 #location
                               ), 
-                     to = c(12,13,15,16,18,19,20,24,26,28,29,30,32,36,37,38,#person
+                     to = c(12,13,14,15,16,18,19,20,24,26,28,29,30,32,36,37,38,#person
                             13,16,20,24,26,28,31,32,37,38,#provider
                             31,33,37,38,#care site
                             13,16,20,24,26,28,32,37, # visit occurrence
