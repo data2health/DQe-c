@@ -139,6 +139,49 @@ visNetwork(nodes, edges) %>%
    visOptions(highlightNearest = TRUE, nodesIdSelection = T) %>% 
    visEdges(arrows = 'from', scaling = list(min = .5, max = 1)) %>%
    visInteraction(navigationButtons = T, dragView = FALSE, zoomView = FALSE)
+} else
+  if (CDM %in% c("OMOPV5_3")) {
+     nodes <- data.frame(id = dat.net$X, 
+                     label = dat.net$CDM_Tables, 
+                     group = c(dat.net$status),
+                     shadow = F)
+ edges <- data.frame(from = c(31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31, #person
+                              33,33,33,33,33,33,33,33,33,33,#provider
+                             2,2,2,2, #caresite
+                              38,38,38,38,38,38,38,38, #visit occurrence
+                             37,37,37,37,37,37,37, #visit detail
+                             6,6, # cohort definition
+                             7,7,7,7,7,7,7, #concept
+                             9, #concept class
+                             26, #note
+                             1, #cohort attribute
+                             17, #domain
+                             34, #relationships
+                             39,39,39, #vocabulary
+                             23,23 #location
+                              ), 
+                     to = c(12,13,15,16,18,19,20,24,26,28,29,30,32,36,37,38,#person
+                            13,16,20,24,26,28,31,32,37,38,#provider
+                            31,33,37,38,#care site
+                            13,16,20,24,26,28,32,37, # visit occurrence
+                            13,16,20,24,26,28,32, #visit detail
+                            4,5, # cohort definition
+                            8,11,10,21,3,22,35, #concept
+                            7, #concept class
+                            27, #note
+                            5, #cohort attribute
+                            7, #domain
+                            10, #relationships
+                            7,3,35, #vocabulary
+                            2,31 #location
+                            ))
+ visNetwork(nodes, edges) %>%
+ visGroups(groupname = "Table loaded but empty", color = "#EE9572", shape = "circle") %>%
+   visGroups(groupname = "Table available", color = "#00C5CD", shape = "circle") %>%
+   visGroups(groupname = "Table not loaded!", color = "gray", shape = "circle") %>%
+   visOptions(highlightNearest = TRUE, nodesIdSelection = T) %>% 
+   visEdges(arrows = 'from', scaling = list(min = .5, max = 1)) %>%
+   visInteraction(navigationButtons = T, dragView = FALSE, zoomView = FALSE)
   }
 
 
