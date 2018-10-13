@@ -15,7 +15,7 @@ drv <- JDBC("com.amazon.redshift.jdbc41.Driver", paste0(path01,"/DBMS\ Connectio
 
 # connect to Amazon Redshift
 # url <- "<JDBCURL>:<PORT>/<DBNAME>
-url <- "jdbc:redshift://<JDBCURL>:5439/<DBNAME>?ssl=true"
+url <- "jdbc:redshift://dq1-ohdsielasticbeanstalk-c5-redshiftclustermulti-48ubh6gmfltt.cycqgb2nm38n.us-east-1.redshift.amazonaws.com:5439/mycdm?ssl=true"
 conn <- dbConnect(drv, url, usrnm, pss)
 
 rm(pss)
