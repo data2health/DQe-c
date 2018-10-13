@@ -38,7 +38,7 @@ for (j in 1: length(unique(DQTBL$TabNam)))
 {
   NAM <-  unique(DQTBL$TabNam)[j]
   
-  print (NAM)
+  
   ##extracted name of table j in CDM
   NAM_Repo <- as.character(tbls2[(tbls2$CDM_Tables == NAM),"Repo_Tables"])
   
@@ -78,7 +78,7 @@ for (j in 1: length(unique(DQTBL$TabNam)))
 {
   NAM <-  unique(DQTBL$TabNam)[j]
   
-  print (NAM)
+  
   ##extracted name of table j in CDM
   NAM_Repo <- as.character(tbls2[(tbls2$CDM_Tables == NAM),"Repo_Tables"])
   if (!identical(NAM_Repo, character(0))) {
