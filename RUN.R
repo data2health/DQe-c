@@ -11,16 +11,16 @@ source("DQe-c Functions/libs.R")
 #   OMOPV5_2
 #   OMOPV5_3
 
-CDM = ""
+CDM = "OMOPV5_3"
 
 ###identify SQL connection
-## options: SQLServer, Oracle, PostgreSQL, Redshift
-SQL = "" 
+## options: SQLServer, PostgreSQL, Redshift, Oracle (not ready)
+SQL = "PostgreSQL"
 
 
 ## if you have your tables in a particular SQL schema, identify the schema here:
 ## default is that there is no schema. SET SCHEMA NAME, IF THERE IS ONE
-#Options
+#Tutorial Options
 #   "cmsdesynpuf1k"
 #   "cmsdesynpuf23m"
 #   "mimiciii100"
@@ -35,6 +35,13 @@ prefix = "" ## default at none. SET PREFIX, IF THERE IS ONE
 org = "University of Washington" # SET Your Organization Name
 
 
+test <- dbGetQuery(conn,"SELECT * 
+                         FROM PERSON;")
+print (test)
+race <- dbGetQuery(conn, paste0("SELECT * FROM ",schema,prefix,"CONCEPT WHERE domain_id='Gender';"))
+race <- dbGetQuery(conn, paste0("SELECT * FROM ",schema,prefix,"CONCEPT WHERE concept_id=8507;"))
+print (race)
+stop()
 
 ##Now first run the test
 source("without.R")

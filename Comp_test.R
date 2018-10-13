@@ -145,6 +145,75 @@ if (SQL %in% c("SQLServer", "Redshift")) {
     }
   }
   
+} else if (SQL %in% c("PostgreSQL")) {
+  #############################################################################
+  ##loop 3: goes through all columns in all tables and count rows with a NULL/NA value or empty string 
+  ## and store in DQTBL table as a new column, called MS1_FRQ, for each row
+  #############################################################################
+
+  for (j in 1: length(unique(DQTBL$TabNam))) 
+    ##DQTBL$TabNam has all table names
+  {
+    NAM <-  unique(DQTBL$TabNam)[j]
+    ##extracted name of table j in CDM
+    NAM_Repo <- as.character(tbls2[(tbls2$CDM_Tables == NAM),"Repo_Tables"])
+    # L <- as.numeric(tbls2[(tbls2$CDM_Tables == NAM),"NCols"])
+    id.NAM <- which(DQTBL$TabNam == NAM)
+    id.repotabs <- which(repotabs$TABLE_NAME == NAM_Repo)
+    ##extracting the row numbers
+    NAMTB <- DQTBL[id.NAM,]
+    REPOTB <- repotabs[id.repotabs,]
+    
+    ##subsetting the DQTBL and repository table to only the rows from table j
+    ##saving the name of table j as characters
+    
+    for (i in 1:dim(REPOTB)[1])
+      ##now going through the columns of table j
+    {
+      col <- REPOTB$COLUMN_NAME[i]
+      MS1_FRQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT('", col,"') FROM ",schema,NAM_Repo," WHERE '", col, "' IS NULL OR CAST(", col, " AS VARCHAR) IN ('')")))
+      ##calculated length (number of total rows) of each column from each table
+      DQTBL$MS1_FRQ <- ifelse(DQTBL$ColNam == tolower(col) & DQTBL$TabNam == NAM, MS1_FRQ, DQTBL$MS1_FRQ )
+      ##stored frequency in the culumn FRQ
+    }
+  }
+  
+  print ("finished loop 3")
+  
+  #############################################################################
+  ##loop 4: goes through all columns in all tables and count rows with a + - _ # $ * \ ? . , & ^ % ! @ flag, 
+  # meaning that there is nothing in the cell, but also not marked as NULL/NA 
+  ## and store in DQTBL table as a new column, called MS2_FRQ, for each row
+  #############################################################################
+  
+  
+  for (j in 1: length(unique(DQTBL$TabNam))) 
+    ##DQTBL$TabNam has all table names
+  {
+    NAM <-  unique(DQTBL$TabNam)[j]
+    ##extracted name of table j in CDM
+    NAM_Repo <- as.character(tbls2[(tbls2$CDM_Tables == NAM),"Repo_Tables"])
+    
+    # L <- as.numeric(tbls2[(tbls2$CDM_Tables == NAM),"NCols"])
+    id.NAM <- which(DQTBL$TabNam == NAM)
+    id.repotabs <- which(repotabs$TABLE_NAME == NAM_Repo)
+    ##extracting the row numbers
+    NAMTB <- DQTBL[id.NAM,]
+    REPOTB <- repotabs[id.repotabs,]
+    ##subsetting the DQTBL and repository table to only the rows from table j
+    ##saving the name of table j as characters
+    
+    for (i in 1:dim(REPOTB)[1])
+      ##now going through the columns of table j
+    {
+      col <- REPOTB$COLUMN_NAME[i]
+      MS2_FRQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT('", col,"') FROM ",schema,NAM_Repo," WHERE CAST(", col, " AS VARCHAR) IN ('+', '-', '_','#', '$', '*', '\', '?', '.', '&', '^', '%', '!', '@','NI')")))
+      ##calculated length (number of total rows) of each column from each table
+      DQTBL$MS2_FRQ <- ifelse(DQTBL$ColNam == tolower(col) & DQTBL$TabNam == NAM, MS2_FRQ, DQTBL$MS2_FRQ )
+      ##stored frequency in the culumn FRQ
+    }
+  }
+  
 }
 ############# lets see what is going on with the providers table...
 ###providchars <- dbGetQuery(conn, "SELECT providerid FROM dbo.pmndiagnosis WHERE CAST(providerid AS CHAR(54)) IN ('+', '-', '_','#', '$', '*', '\', '?', '.', '&', '^', '%', '!', '@')")

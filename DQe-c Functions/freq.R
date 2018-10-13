@@ -38,28 +38,31 @@ for (j in 1: length(unique(DQTBL$TabNam)))
 {
   NAM <-  unique(DQTBL$TabNam)[j]
   
+  print (NAM)
   ##extracted name of table j in CDM
   NAM_Repo <- as.character(tbls2[(tbls2$CDM_Tables == NAM),"Repo_Tables"])
   
-  # L <- as.numeric(tbls2[(tbls2$CDM_Tables == NAM),"NCols"])
-  id.NAM <- which(DQTBL$TabNam == NAM)
-
-  id.repotabs <- which(repotabs$TABLE_NAME == NAM_Repo)
-  ##extracting the row numbers
-  NAMTB <- DQTBL[id.NAM,]
-  REPOTB <- repotabs[id.repotabs,]
+  if (!identical(NAM_Repo, character(0))) {
+    # L <- as.numeric(tbls2[(tbls2$CDM_Tables == NAM),"NCols"])
+    id.NAM <- which(DQTBL$TabNam == NAM)
   
-  ##subsetting the DQTBL and repository table to only the rows from table j
-  ##saving the name of table j as characters
-  
-  for (i in 1:dim(REPOTB)[1])
-    ##now going through the columns of table j
-  {
-    col <- REPOTB$COLUMN_NAME[i]
-    FRQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT(*) FROM ",schema,NAM_Repo)))
-    ##calculated length (number of total rows) of each column from each table
-    DQTBL$FRQ <- ifelse(DQTBL$ColNam == tolower(col) & DQTBL$TabNam == NAM, FRQ, DQTBL$FRQ )
-    ##stored frequency in the culumn FRQ
+    id.repotabs <- which(repotabs$TABLE_NAME == NAM_Repo)
+    ##extracting the row numbers
+    NAMTB <- DQTBL[id.NAM,]
+    REPOTB <- repotabs[id.repotabs,]
+    
+    ##subsetting the DQTBL and repository table to only the rows from table j
+    ##saving the name of table j as characters
+    
+    for (i in 1:dim(REPOTB)[1])
+      ##now going through the columns of table j
+    {
+      col <- REPOTB$COLUMN_NAME[i]
+      FRQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT(*) FROM ",schema,NAM_Repo)))
+      ##calculated length (number of total rows) of each column from each table
+      DQTBL$FRQ <- ifelse(DQTBL$ColNam == tolower(col) & DQTBL$TabNam == NAM, FRQ, DQTBL$FRQ )
+      ##stored frequency in the culumn FRQ
+    }
   }
 }
 
@@ -74,26 +77,29 @@ for (j in 1: length(unique(DQTBL$TabNam)))
   ##DQTBL$TabNam has all table names
 {
   NAM <-  unique(DQTBL$TabNam)[j]
+  
+  print (NAM)
   ##extracted name of table j in CDM
   NAM_Repo <- as.character(tbls2[(tbls2$CDM_Tables == NAM),"Repo_Tables"])
-  
-  # L <- as.numeric(tbls2[(tbls2$CDM_Tables == NAM),"NCols"])
-  id.NAM <- which(DQTBL$TabNam == NAM)
-  id.repotabs <- which(repotabs$TABLE_NAME == NAM_Repo)
-  ##extracting the row numbers
-  NAMTB <- DQTBL[id.NAM,]
-  REPOTB <- repotabs[id.repotabs,]
-  ##subsetting the DQTBL and repository table to only the rows from table j
-  ##saving the name of table j as characters
-  
-  for (i in 1:dim(REPOTB)[1])
-    ##now going through the columns of table j
-  {
-    col <- REPOTB$COLUMN_NAME[i]
-    UNIQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT(DISTINCT ", col,") FROM ",schema,NAM_Repo)))
-    ##calculated length (number of total rows) of each column from each table
-    DQTBL$UNIQFRQ <- ifelse(DQTBL$ColNam == tolower(col) & DQTBL$TabNam == NAM, UNIQ, DQTBL$UNIQFRQ )
-    ##stored frequency in the culumn FRQ
+  if (!identical(NAM_Repo, character(0))) {
+    # L <- as.numeric(tbls2[(tbls2$CDM_Tables == NAM),"NCols"])
+    id.NAM <- which(DQTBL$TabNam == NAM)
+    id.repotabs <- which(repotabs$TABLE_NAME == NAM_Repo)
+    ##extracting the row numbers
+    NAMTB <- DQTBL[id.NAM,]
+    REPOTB <- repotabs[id.repotabs,]
+    ##subsetting the DQTBL and repository table to only the rows from table j
+    ##saving the name of table j as characters
+    
+    for (i in 1:dim(REPOTB)[1])
+      ##now going through the columns of table j
+    {
+      col <- REPOTB$COLUMN_NAME[i]
+      UNIQ <- as.numeric(dbGetQuery(conn, paste0("SELECT COUNT(DISTINCT ", col,") FROM ",schema,NAM_Repo)))
+      ##calculated length (number of total rows) of each column from each table
+      DQTBL$UNIQFRQ <- ifelse(DQTBL$ColNam == tolower(col) & DQTBL$TabNam == NAM, UNIQ, DQTBL$UNIQFRQ )
+      ##stored frequency in the culumn FRQ
+    }
   }
 }
 

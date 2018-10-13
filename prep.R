@@ -5,6 +5,8 @@
 if (schema != "" && substr(schema,nchar(schema),nchar(schema)) != ".") {
   schema_orig = schema
   schema = paste0(schema,".")
+} else if (schema == "") {
+  schema_orig = schema
 }
 
 if (SQL == "SQLServer") {
@@ -38,14 +40,13 @@ if (CDM == "PCORNET3") {
 CDM_TABLES <- c(as.character(unique(DQTBL$TabNam)))
 
 # create a list of tables in the SQL database
-if (SQL %in% c("SQLServer", "PostreSQL")) {
+if (SQL %in% c("SQLServer", "PostgreSQL")) {
   list <- dbGetQuery(conn, "SELECT * FROM INFORMATION_SCHEMA.TABLES")
 } else if (SQL == "Oracle") {
   list <- dbGetQuery(conn, "select table_name from all_tables")
 } else if (SQL == "Redshift") {
   list <- dbGetQuery(conn, paste("SELECT * FROM INFORMATION_SCHEMA.TABLES tables WHERE tables.table_schema='",schema_orig,"';", sep=""))
 }
-
 
 if (CDM %in% c("OMOPV5_0", "OMOPV5_2", "OMOPV5_3")) {
   colnames(list)[3] <- "Repo_Tables"
@@ -81,7 +82,9 @@ if (SQL == "Redshift") {
   colnames(tbls2)[10] <- "CDM_Tables"
 } else if (SQL == "SQLServer"){
   colnames(tbls2)[5] <- "CDM_Tables"
-} else {
+} else if (SQL == "PostgreSQL") {
+  colnames(tbls2)[13] <- "CDM_Tables"
+}else {
   colnames(tbls2)[2] <- "CDM_Tables"
 }
 
@@ -158,6 +161,22 @@ if (SQL == "SQLServer") {
                   by = "Repo_Tables",
                   type = "left")
     rm(x1)
+  } else if (SQL == "PostgreSQL") {
+    x1 <- dbGetQuery(conn, paste("SELECT 
+                                    tabs.table_name, 
+                                    pg.reltuples::bigint, 
+                                    pg_relation_size(tabs.table_name)/1000 
+                                  FROM pg_catalog.pg_class pg, information_schema.tables tabs
+                                  WHERE tabs.table_name=pg.relname AND 
+                                        tabs.table_schema='public';", sep=""))
+    
+    
+    names(x1)[1:3] = c("Repo_Tables", "Rows", "TotalSizeKB")
+    
+    tbls2 <- join(tbls2, x1, 
+                  by = "Repo_Tables",
+                  type = "left")
+    rm(x1) 
   }
 
 rownames(tbls2) <- NULL

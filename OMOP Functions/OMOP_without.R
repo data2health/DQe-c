@@ -1,16 +1,11 @@
 
 ## these functions calculate the percentages of the different variables that patients are missing in the data
 
-test <- dbGetQuery(conn, paste0("SELECT DISTINCT obs.observation_concept_id, co.concept_name, co.concept_code
-                                FROM cmsdesynpuf23m.observation obs INNER JOIN cmsdesynpuf23m.concept co
-                                on co.concept_id=obs.observation_concept_id
-                                WHERE co.concept_name LIKE '%pulse%';"))
-#print (test)
-#stop()
 
 ## ====================================
 ## Gender
 gender <- dbGetQuery(conn, paste0("SELECT concept_id FROM ",schema,prefix,"CONCEPT WHERE domain_id='Gender';"))
+
 Gender <- as.vector(gender[['concept_id']])
 without_gender <- withoutdem(table = person, col = "gender_concept_id", ref_date2 = "2018-10-01", list = Gender)
 

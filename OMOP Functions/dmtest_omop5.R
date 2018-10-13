@@ -8,6 +8,7 @@ orphan_key_query <- function(out_table, ref_table, ref_col) {
                                       FROM ",prefix,schema,ref_table," ref_tbl
                                       WHERE ref_tbl.",ref_col,"=","outtbl.",ref_col,"
                                     );"))
+  
   return (data$count)
 }
 
@@ -35,10 +36,9 @@ DQTBL_KEYS <- rbind(DQTBL_KEYS,DQTBL_KEYS2)
 ### Now let's count the number of unique ids that do not exist in the reference column and assign related values to them
 ## and then subtracting the number of counted outs from the number of counted ins
 
-
 #person id
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "observation" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] <- 
-  orphan_key_query("person", "observation", "person_id")
+  orphan_key_query("observation", "person", "person_id")
 
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "observation" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] <- 
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "observation" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] - 
@@ -46,23 +46,23 @@ DQTBL_KEYS[(DQTBL_KEYS$TabNam == "observation" & DQTBL_KEYS$ColNam == "person_id
 
 
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "visit_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] <- 
-  orphan_key_query("person", "visit_occurrence", "person_id")
-  
+  orphan_key_query("visit_occurrence", "person", "person_id")
+
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "visit_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] <- 
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "visit_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] - 
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "visit_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] 
 
 
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "drug_exposure" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] <- 
-  orphan_key_query("person", "drug_exposure", "person_id")
-  
+  orphan_key_query("drug_exposure", "person", "person_id")
+
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "drug_exposure" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] <- 
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "drug_exposure" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] - 
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "drug_exposure" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] 
 
 
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "procedure_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] <- 
-  orphan_key_query("person", "procedure_occurrence", "person_id")
+  orphan_key_query("procedure_occurrence", "person", "person_id")
 
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "procedure_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] <- 
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "procedure_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] - 
@@ -70,21 +70,14 @@ DQTBL_KEYS[(DQTBL_KEYS$TabNam == "procedure_occurrence" & DQTBL_KEYS$ColNam == "
 
 
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "condition_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] <- 
-  orphan_key_query("person", "condition_occurrence", "person_id")
-  
+  orphan_key_query("condition_occurrence", "person", "person_id")
+
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "condition_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] <- 
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "condition_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] - 
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "condition_occurrence" & DQTBL_KEYS$ColNam == "person_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] 
 
 
 #care site id
-DQTBL_KEYS[(DQTBL_KEYS$TabNam == "person" & DQTBL_KEYS$ColNam == "care_site_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] <- 
-  orphan_key_query("person", "care_site", "care_site_id")
-
-DQTBL_KEYS[(DQTBL_KEYS$TabNam == "person" & DQTBL_KEYS$ColNam == "care_site_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] <- 
-  DQTBL_KEYS[(DQTBL_KEYS$TabNam == "person" & DQTBL_KEYS$ColNam == "care_site_id" & DQTBL_KEYS$Index == "Count_In"),"UNIQFRQ"] - 
-  DQTBL_KEYS[(DQTBL_KEYS$TabNam == "person" & DQTBL_KEYS$ColNam == "care_site_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"]
-
 
 DQTBL_KEYS[(DQTBL_KEYS$TabNam == "provider" & DQTBL_KEYS$ColNam == "care_site_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] <- 
   orphan_key_query("provider", "care_site", "care_site_id")
@@ -152,7 +145,7 @@ DQTBL_KEYS[(DQTBL_KEYS$TabNam == "care_site" & DQTBL_KEYS$ColNam == "location_id
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "care_site" & DQTBL_KEYS$ColNam == "location_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] 
 
 
-if (CDM %in% c("OMOPV5_2", "OMOPV5_3")) {
+if (CDM %in% c("")) {
   # visit_detail_id
   DQTBL_KEYS[(DQTBL_KEYS$TabNam == "condition_occurrence" & DQTBL_KEYS$ColNam == "visit_detail_id" & DQTBL_KEYS$Index == "Count_Out"),"UNIQFRQ"] <- 
     orphan_key_query("condition_occurrence", "visit_detail", "visit_detail_id")
