@@ -8,7 +8,7 @@ source("keys.R")
 
 # set up connection
 path01 <- getwd()
-drv <- JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver", paste0(path01,"/sqljdbc4.jar"),
+drv <- JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver", paste0(path01,"/DBMS Connections/sqljdbc4.jar"),
             identifier.quote="`")
 # creating a connection object by calling dbConnect
 conn <- dbConnect(drv, 
